@@ -20,6 +20,12 @@ has number => (
     isa      => 'Int',
 );
 
+sub is_found {
+    my ($self, @args) = @_;
+
+}
+
+
 no Any::Moose;
 __PACKAGE__->meta->make_immutable;
 
