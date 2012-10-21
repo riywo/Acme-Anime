@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use Acme::Anime::TV::Data;
 use Acme::Anime::TV::Const;
-use Data::Dumper;
 
 use Any::Moose;
 
@@ -13,17 +12,21 @@ has data_list => (
     default => sub {
         my @ret;
         for my $data (@Acme::Anime::TV::Const::LIST) {
-            push @ret, Acme::Anime::TV::Data->new($data);
+            my $args = +{};
+            for (qw/id title number/) {
+                $args->{$_} = $data->{$_} if exists $data->{$_};
+            }
+            push @ret, Acme::Anime::TV::Data->new($args);
         }
         return \@ret;
     },
 );
 
 sub find {
-    my ($self, @args) = @_;
+    my ($self, $query) = @_;
     my @ret;
     for my $data (@{$self->data_list}) {
-        push @ret, $data if($data->is_found(@args));
+        push @ret, $data if($data->is_found($query));
     }
     return @ret;
 }
